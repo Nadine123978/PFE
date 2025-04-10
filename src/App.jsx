@@ -27,13 +27,13 @@ function App() {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div className="app">
+        <div className="app" style={{ display: "flex", height: "100vh" }}>
         <ProSidebarProvider>
         <Sidebar isSidebar={isSidebar} />
          {/* باقي محتوى الصفحة */}
-       </ProSidebarProvider>
+         </ProSidebarProvider>
 
-          <main className="content">
+       <main className="content" style={{ flex: 1, overflowY: "auto" }}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/team" element={<Team />} />

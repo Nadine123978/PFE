@@ -5,7 +5,16 @@ import Gallery from "../../components/Gallery";
 
 const Bar = () => {
   return (
-    <Box m="20px">
+    <Box
+    component="main"
+    sx={{
+      flexGrow: 1,
+      p: 3,
+      marginLeft: "250px",
+       width: "calc(100% - 250px)"
+        
+    }}
+  >
       <Header title="Bar Chart" subtitle="Simple Bar Chart" />
       <Box height="75vh">
         <Gallery />

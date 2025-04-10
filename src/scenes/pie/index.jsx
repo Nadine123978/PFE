@@ -4,7 +4,16 @@ import PieChart from "../../components/PieChart";
 
 const Pie = () => {
   return (
-    <Box m="20px">
+    <Box
+    component="main"
+    sx={{
+      flexGrow: 1,
+      p: 3,
+      marginLeft: "250px",
+       width: "calc(100% - 250px)"
+        
+    }}
+  >
       <Header title="Pie Chart" subtitle="Simple Pie Chart" />
       <Box height="75vh">
         <PieChart />

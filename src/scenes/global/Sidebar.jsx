@@ -41,12 +41,14 @@ const SideBar = () => {
   ];
 
   return (
-    <Box
-      sx={{
-        height: "100%",
-        display: "flex",
-        position: "fixed",
-        zIndex: 100,
+        <Box
+  sx={{
+    height: "100vh", // يمنع أي محتويات خارج الشاشة
+    width: "250px", // تحديد العرض
+    position: "fixed",
+    zIndex: 100, 
+    overflow: "auto", // يسمح بالتمرير إذا كان المحتوى كبيرًا
+    background: colors.primary[400],
         "& .ps-sidebar-container": {
           background: `${colors.primary[400]} !important`,
           borderRadius: "25px",

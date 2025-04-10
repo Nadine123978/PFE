@@ -4,7 +4,16 @@ import LineChart from "../../components/LineChart";
 
 const Line = () => {
   return (
-    <Box m="20px">
+    <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          marginLeft: "250px",
+           width: "calc(100% - 250px)"
+            
+        }}
+      >
       <Header title="Line Chart" subtitle="Simple Line Chart" />
       <Box height="75vh">
         <LineChart />
