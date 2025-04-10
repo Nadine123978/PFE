@@ -70,20 +70,21 @@ const Team = () => {
 
   return (
     <Box
-    component="main"
-    sx={{
-      flexGrow: 1,
-      p: 3,
-      marginLeft: "250px",
-       width: "calc(100% - 250px)"
-        
-    }}
-  >
+      component="main"
+      sx={{
+        flexGrow: 1,
+        p: 3,
+        ml: "250px",
+        width: "calc(100vw - 250px)",
+      }}
+    >
       <Header title="Bookings" subtitle="Managing the Team Members" />
+  
       <Box
-        m="40px 0 0 0"
-        height="75vh"
+        mt="40px"
+        height="calc(100vh - 160px)"
         sx={{
+          overflowX: "auto",
           "& .MuiDataGrid-root": {
             border: "none",
           },
@@ -113,6 +114,6 @@ const Team = () => {
       </Box>
     </Box>
   );
-};
+}
 
 export default Team;

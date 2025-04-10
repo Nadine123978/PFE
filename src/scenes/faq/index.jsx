@@ -16,8 +16,8 @@ const FAQ = () => {
     sx={{
       flexGrow: 1,
       p: 3,
-      marginLeft: "250px",
-       width: "calc(100% - 250px)"
+      ml: "250px",
+      width: "calc(100vw - 250px)",
         
     }}
   >
