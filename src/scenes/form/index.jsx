@@ -14,7 +14,7 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import SearchIcon from "@mui/icons-material/Search";
 import Header from "../../components/Header";
-import EventCard from "../../components/EventCard";
+import AdventureCard from "../../components/EventCard";
 import { tokens } from "../../theme";
 import { useState } from "react";
 
@@ -172,36 +172,28 @@ width: "calc(100vw - 250px)",
       </Box>
 
       {/* Event Cards */}
-      <Box
-        display="grid"
-        gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="auto"
-        gap="20px"
-        borderRadius="20px"
-        padding="10px"
-        bgcolor={colors.primary[300]}
-      >
-        <Box
-          gridColumn="span 4"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <EventCard
-            category="Workshop"
-            title="React Basics"
-            date="2025-04-10"
-            time="10:00 AM"
-            location="Riyadh"
-            price="99"
-            progress={70}
-            image="https://via.placeholder.com/400x300"
-            status="Active"
-          />
-        </Box>
-      </Box>
-    </Box>
-  );
-};
+    
+    
+<Box
+  sx={{
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "20px",
+    justifyContent: "flex-start",
+    borderRadius: "20px",
+    padding: "10px",
+    bgcolor: colors.primary[300],
+  }}
+>
+  <AdventureCard />
+  <AdventureCard />
+  <AdventureCard />
+  <AdventureCard />
+
+</Box>
+</Box>
+  
+);
+}
 
 export default Form;

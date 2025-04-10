@@ -1,49 +1,120 @@
 import React from "react";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
+  LinearProgress,
+  Stack,
+  Button,
+} from "@mui/material";
 
-const EventCard = ({
-  category,
-  title,
-  date,
-  time,
-  location,
-  price,
-  progress,
-  image,
-  status,
-}) => {
+const AdventureCard = () => {
   return (
-    <div className="bg-gray-100 rounded-2xl shadow-md overflow-hidden w-full max-w-xs">
-      <div className="relative">
-        <img src={image} alt={title} className="w-full h-48 object-cover" />
-        <span className="absolute top-3 left-3 bg-white text-xs px-3 py-1 rounded-full font-medium text-slate-800">
-          {category}
-        </span>
-        <span className="absolute top-3 right-3 bg-purple-600 text-white text-xs px-3 py-1 rounded-full font-medium">
-          {status}
-        </span>
-      </div>
-      <div className="p-4">
-        <h3 className="text-md font-semibold text-slate-800">{title}</h3>
-        <p className="text-sm text-slate-500 mt-1">
-          {date} – {time}
-        </p>
-        <p className="text-sm text-slate-500">{location}</p>
+    <Card
+      sx={{
+        borderRadius: 5,
+        width: 270,
+        bgcolor: "#fefcff",
+        overflow: "hidden",
+        boxShadow: 4,
+        transition: "transform 0.3s, box-shadow 0.3s",
+        "&:hover": {
+          transform: "scale(1.03)",
+          boxShadow: 6,
+        },
+      }}
+    >
+      <CardMedia
+        component="img"
+        height="160"
+        image="https://i.imgur.com/C3wrmW2.png"
+        alt="Adventure Gear Show"
+      />
+      <CardContent>
+        {/* Tags */}
+        <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+          <Chip
+            label="Outdoor & Adventure"
+            size="small"
+            sx={{
+              bgcolor: "#e3e2fb",
+              color: "#4a4bc4",
+              fontWeight: "bold",
+              borderRadius: 2,
+            }}
+          />
+          <Chip
+            label="Active"
+            size="small"
+            sx={{
+              bgcolor: "#fce4fd",
+              color: "#d600c0",
+              fontWeight: "bold",
+              borderRadius: 2,
+            }}
+          />
+        </Stack>
 
-        <div className="mt-4">
-          <div className="w-full h-2 bg-slate-200 rounded-full">
-            <div
-              className="h-full bg-purple-500 rounded-full"
-              style={{ width: `${progress}%` }}
-            ></div>
-          </div>
-          <div className="flex justify-between text-sm text-slate-600 mt-1">
-            <span>{progress}%</span>
-            <span className="font-semibold text-purple-600">${price}</span>
-          </div>
-        </div>
-      </div>
-    </div>
+        {/* Date & Title */}
+        <Typography variant="body2" color="text.secondary">
+          June 5, 2029 – 3:00 PM
+        </Typography>
+        <Typography variant="h6" sx={{ mt: 0.5, fontWeight: "bold" }}>
+          Adventure Gear Show
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ display: "flex", alignItems: "center", gap: 1, mt: 0.5 }}
+        >
+          📍 Rocky Ridge Exhibition Hall, Denver, CO
+        </Typography>
+
+        {/* Progress Bar */}
+        <Box sx={{ mt: 2 }}>
+          <LinearProgress
+            variant="determinate"
+            value={65}
+            sx={{
+              height: 6,
+              borderRadius: 5,
+              bgcolor: "#eee",
+              "& .MuiLinearProgress-bar": {
+                backgroundColor: "#b057fc",
+              },
+            }}
+          />
+          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 1 }}>
+            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+              65%
+            </Typography>
+            <Typography variant="body2" color="secondary" sx={{ fontWeight: "bold" }}>
+              $40
+            </Typography>
+          </Stack>
+        </Box>
+
+        {/* Button */}
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{
+            mt: 2,
+            bgcolor: "#b057fc",
+            fontWeight: "bold",
+            "&:hover": {
+              bgcolor: "#993ce6",
+            },
+          }}
+        >
+          Book Now
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 
-export default EventCard;
+export default AdventureCard;
