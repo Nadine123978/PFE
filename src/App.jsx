@@ -54,9 +54,5 @@ function App() {
         </div>
       </ThemeProvider>
     </ColorModeContext.Provider>
-    </Router>
-  );
-}
-
+    </Router>  );}
 export default App;
-554
