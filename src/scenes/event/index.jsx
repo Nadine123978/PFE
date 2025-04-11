@@ -10,8 +10,10 @@ import Header from "../../components/Header";
 import AdventureCard from "../../components/EventCard";
 import { tokens } from "../../theme";
 import { useState } from "react";
+import { Link } from 'react-router-dom';  // إضافة هذا السطر
 
-const Form = () => {
+
+const Event = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -176,7 +178,8 @@ const Form = () => {
       </Box>
 
       {/* Event Cards */}
-      <Box
+       {/* Event Cards */}
+       <Box
         sx={{
           display: "flex",
           flexWrap: "wrap",
@@ -188,11 +191,12 @@ const Form = () => {
         }}
       >
         {[...Array(4)].map((_, i) => (
-          <AdventureCard key={i} />
+          <Link key={i} to={`/event-details/${i + 1}`}>  {/* إرفاق رابط عند النقر على البطاقة */}
+            <AdventureCard />
+          </Link>
         ))}
       </Box>
     </Box>
   );
 };
-
-export default Form;
+export default Event;
