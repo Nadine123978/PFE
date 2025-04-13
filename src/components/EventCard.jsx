@@ -11,7 +11,19 @@ import {
   Button,
 } from "@mui/material";
 
-const AdventureCard = () => {
+const AdventureCard = ({ event }) => {
+  const {
+    eventname,
+    description,
+    eventdate,
+    categoryid,
+    locationid,
+    totaltickets,
+    soldtickets,
+  } = event;
+
+  const progress = totaltickets > 0 ? (soldtickets / totaltickets) * 100 : 0;
+
   return (
     <Card
       sx={{
@@ -31,21 +43,22 @@ const AdventureCard = () => {
         component="img"
         height="160"
         image="https://i.imgur.com/C3wrmW2.png"
-        alt="Adventure Gear Show"
+        alt={eventname}
       />
       <CardContent>
         {/* Tags */}
         <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-          <Chip
-            label="Outdoor & Adventure"
-            size="small"
-            sx={{
-              bgcolor: "#e3e2fb",
-              color: "#4a4bc4",
-              fontWeight: "bold",
-              borderRadius: 2,
-            }}
-          />
+        <Chip
+  label={`Category #${categoryid}`}
+  size="small"
+  sx={{
+    bgcolor: "#e3e2fb",
+    color: "#4a4bc4",
+    fontWeight: "bold",
+    borderRadius: 2,
+  }}
+/>
+
           <Chip
             label="Active"
             size="small"
@@ -60,24 +73,24 @@ const AdventureCard = () => {
 
         {/* Date & Title */}
         <Typography variant="body2" color="text.secondary">
-          June 5, 2029 – 3:00 PM
+          {eventdate}
         </Typography>
         <Typography variant="h6" sx={{ mt: 0.5, fontWeight: "bold" }}>
-          Adventure Gear Show
+          {eventname}
         </Typography>
         <Typography
           variant="body2"
           color="text.secondary"
           sx={{ display: "flex", alignItems: "center", gap: 1, mt: 0.5 }}
         >
-          📍 Rocky Ridge Exhibition Hall, Denver, CO
+          📍 Location #{locationid}
         </Typography>
 
         {/* Progress Bar */}
         <Box sx={{ mt: 2 }}>
           <LinearProgress
             variant="determinate"
-            value={65}
+            value={progress}
             sx={{
               height: 6,
               borderRadius: 5,
@@ -89,10 +102,10 @@ const AdventureCard = () => {
           />
           <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 1 }}>
             <Typography variant="body2" sx={{ fontWeight: "bold" }}>
-              65%
+              {Math.round(progress)}%
             </Typography>
             <Typography variant="body2" color="secondary" sx={{ fontWeight: "bold" }}>
-              $40
+              {soldtickets}/{totaltickets}
             </Typography>
           </Stack>
         </Box>
