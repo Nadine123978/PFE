@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -8,21 +8,38 @@ import {
   Chip,
   LinearProgress,
   Stack,
-  Button,
 } from "@mui/material";
+import axios from "axios";
 
-const AdventureCard = ({ event }) => {
+const AdventureCard = () => {
+  const [event, setEvent] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8081/api/events")
+      .then((response) => {
+        setEvent(response.data);
+      })
+      .catch((error) => {
+        console.error("حدث خطأ أثناء جلب البيانات:", error);
+      });
+  }, []);
+
+  if (!event) return <div>جاري التحميل...</div>;
+
+  // ✅ تعديل الأسماء لتتطابق مع الـ backend
   const {
-    eventname,
+    title,
     description,
-    eventdate,
-    categoryid,
-    locationid,
-    totaltickets,
-    soldtickets,
+    date,
+    category,
+    location,
+    totalTickets,
+    soldTickets,
   } = event;
 
-  const progress = totaltickets > 0 ? (soldtickets / totaltickets) * 100 : 0;
+  const progress =
+    totalTickets > 0 ? (soldTickets / totalTickets) * 100 : 0;
 
   return (
     <Card
@@ -42,22 +59,22 @@ const AdventureCard = ({ event }) => {
       <CardMedia
         component="img"
         height="160"
-        image="https://i.imgur.com/C3wrmW2.png"
-        alt={eventname}
+        image="https://i.imgur.com/C3wrmW2.png" // 🔄 ممكن later تستخدم event.imageUrl
+        alt={title}
       />
       <CardContent>
         {/* Tags */}
         <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-        <Chip
-  label={`Category #${categoryid}`}
-  size="small"
-  sx={{
-    bgcolor: "#e3e2fb",
-    color: "#4a4bc4",
-    fontWeight: "bold",
-    borderRadius: 2,
-  }}
-/>
+          <Chip
+            label={`Category: ${category?.name || "?"}`}
+            size="small"
+            sx={{
+              bgcolor: "#e3e2fb",
+              color: "#4a4bc4",
+              fontWeight: "bold",
+              borderRadius: 2,
+            }}
+          />
 
           <Chip
             label="Active"
@@ -73,17 +90,17 @@ const AdventureCard = ({ event }) => {
 
         {/* Date & Title */}
         <Typography variant="body2" color="text.secondary">
-          {eventdate}
+          {date}
         </Typography>
         <Typography variant="h6" sx={{ mt: 0.5, fontWeight: "bold" }}>
-          {eventname}
+          {title}
         </Typography>
         <Typography
           variant="body2"
           color="text.secondary"
           sx={{ display: "flex", alignItems: "center", gap: 1, mt: 0.5 }}
         >
-          📍 Location #{locationid}
+          📍 {location?.name || "Unknown"}
         </Typography>
 
         {/* Progress Bar */}
@@ -100,31 +117,24 @@ const AdventureCard = ({ event }) => {
               },
             }}
           />
-          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 1 }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            sx={{ mt: 1 }}
+          >
             <Typography variant="body2" sx={{ fontWeight: "bold" }}>
               {Math.round(progress)}%
             </Typography>
-            <Typography variant="body2" color="secondary" sx={{ fontWeight: "bold" }}>
-              {soldtickets}/{totaltickets}
+            <Typography
+              variant="body2"
+              color="secondary"
+              sx={{ fontWeight: "bold" }}
+            >
+              {soldTickets}/{totalTickets}
             </Typography>
           </Stack>
         </Box>
-
-        {/* Button */}
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            mt: 2,
-            bgcolor: "#b057fc",
-            fontWeight: "bold",
-            "&:hover": {
-              bgcolor: "#993ce6",
-            },
-          }}
-        >
-          Book Now
-        </Button>
       </CardContent>
     </Card>
   );

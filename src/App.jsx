@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-//import Topbar from "./scenes/global/Topbar";
-import Header from "./components/Header";
 import Sidebar from "./scenes/global/Sidebar";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import Dashboard from "./scenes/dashboard";
@@ -14,11 +12,10 @@ import EventDetails from "./scenes/EventDetails"; // الصفحة لعرض تف�
 import Line from "./scenes/line";
 import Pie from "./scenes/pie";
 import FAQ from "./scenes/faq";
-import Geography from "./scenes/geography";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "./theme";
-import { Calendar } from "lucide-react";
-//import Calendar from "./scenes/calendar/calendar";
+//import { Calendar } from "lucide-react";
+import Calendarpage from "./scenes/calendar";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -41,14 +38,13 @@ function App() {
               <Route path="/team" element={<Team />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/invoices" element={<Invoices />} />
-              <Route path="/form" element={<Calendar />} />
-        <Route path="/event-details/:id" element={<EventDetails />} />
-              <Route path="/bar" element={<Bar />} />
+              <Route path="/calender" element={<Calendarpage />} />
+              <Route path="/event-details/:id" element={<EventDetails />} />
+              <Route path="/gallery" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />
               <Route path="/line" element={<Line />} />
               <Route path="/faq" element={<FAQ />} />
-              <Route path="/calendar" element={<Event />} />
-              <Route path="/geography" element={<Geography />} />
+              <Route path="/event" element={<Event />} />
             </Routes>
           </main>
         </div>

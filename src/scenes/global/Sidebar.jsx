@@ -11,12 +11,28 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
-import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
-import GalleryOutlinedIcon from "@mui/icons-material/PhotoLibraryOutlined";
-import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined"; 
+import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
+import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
+
+// Dashboard
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+
+// Invoices
+import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
+
+// Inbox
+import MailOutlineOutlinedIcon from "@mui/icons-material/MailOutlineOutlined";
+
+// Financials
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+
+// Gallery
+import PhotoLibraryOutlinedIcon from "@mui/icons-material/PhotoLibraryOutlined";
+
+// Feedback
+import FeedbackOutlinedIcon from "@mui/icons-material/FeedbackOutlined";
+
 import { useNavigate } from "react-router-dom";
 
 const SideBar = () => {
@@ -29,15 +45,15 @@ const SideBar = () => {
   const { collapseSidebar, toggleSidebar, collapsed, broken } = useProSidebar();
 
   const menuItems = [
-    { title: "Dashboard", icon: <HomeOutlinedIcon />, path: "/" },
-    { title: "Bookings", icon: <BusinessCenterOutlinedIcon />, path: "/team" },
-    { title: "Invoices", icon: <ContactsOutlinedIcon />, path: "/contacts" },
-    { title: "Inbox", icon: <ReceiptOutlinedIcon />, path: "/invoices" },
-    { title: "Calender", icon: <CalendarTodayOutlinedIcon />, path: "/form" },
-    { title: "Events", icon: <EventNoteOutlinedIcon />, path: "/calendar" },
-    { title: "Financials", icon: <HelpOutlineOutlinedIcon />, path: "/faq" },
-    { title: "Gallery", icon: <GalleryOutlinedIcon />, path: "/bar" },
-    { title: "Feedback", icon: <PieChartOutlineOutlinedIcon />, path: "/pie" },
+    { title: "Dashboard", icon: <DashboardOutlinedIcon />, path: "/" },
+    { title: "Bookings", icon: <AssignmentOutlinedIcon />, path: "/team" },
+    { title: "Invoices", icon: <ReceiptLongOutlinedIcon />, path: "/contacts" },
+    { title: "Inbox", icon: < MailOutlineOutlinedIcon />, path: "/invoices" },
+    { title: "Calender", icon: <CalendarTodayOutlinedIcon />, path: "/calender" },
+    { title: "Events", icon: <EventOutlinedIcon />, path: "/event" },
+    { title: "Financials", icon: <AccountBalanceWalletOutlinedIcon />, path: "/faq" },
+    { title: "Gallery", icon: <PhotoLibraryOutlinedIcon />, path: "/gallery" },
+    { title: "Feedback", icon: <FeedbackOutlinedIcon/>, path: "/pie" },
   ];
 
   return (
