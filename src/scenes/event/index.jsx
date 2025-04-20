@@ -148,9 +148,8 @@ const Event = () => {
             </IconButton>
 
             {/* event link and card */}
-            <Link to={`/event-details/${event.id}`} style={{ textDecoration: "none" }}>
+           
               <AdventureCard event={event} />
-            </Link>
           </Box>
         ))}
       </Box>

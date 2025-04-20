@@ -8,12 +8,10 @@ import {
   Chip,
   LinearProgress,
   Stack,
-  ButtonGroup,
-  Button,
   IconButton,
 } from "@mui/material";
 import axios from "axios";
-import DeleteIcon from "@mui/icons-material/Delete"; // أيقونة الحذف
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const AdventureCard = () => {
   const [events, setEvents] = useState([]);
@@ -22,24 +20,30 @@ const AdventureCard = () => {
   useEffect(() => {
     axios
       .get(`http://localhost:8081/api/events?status=${statusFilter}`)
-      .then((response) => {
-        setEvents(response.data);
-      })
-      .catch((error) => {
-        console.error("حدث خطأ أثناء جلب البيانات:", error);
-      });
+      .then((response) => setEvents(response.data))
+      .catch((error) => console.error("حدث خطأ أثناء جلب البيانات:", error));
   }, [statusFilter]);
 
   const handleDeleteEvent = (id) => {
     axios
       .delete(`http://localhost:8081/api/events/${id}`)
       .then(() => {
-        // إزالة الحدث المحذوف من الواجهة
-        setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
+        setEvents((prev) => prev.filter((event) => event.id !== id));
       })
-      .catch((error) => {
-        console.error("حدث خطأ أثناء حذف الحدث:", error);
-      });
+      .catch((error) => console.error("خطأ أثناء الحذف:", error));
+  };
+
+  const handleUpdateEvent = (id, updatedField) => {
+    axios
+      .put(`http://localhost:8081/api/events/${id}`, updatedField)
+      .then(() => {
+        setEvents((prev) =>
+          prev.map((event) =>
+            event.id === id ? { ...event, ...updatedField } : event
+          )
+        );
+      })
+      .catch((error) => console.error("خطأ أثناء التحديث:", error));
   };
 
   if (!events || events.length === 0)
@@ -47,7 +51,6 @@ const AdventureCard = () => {
 
   return (
     <Box>
-      {/* عرض الأحداث */}
       <Stack direction="row" flexWrap="wrap" gap={3}>
         {events.map((event) => {
           const {
@@ -73,6 +76,7 @@ const AdventureCard = () => {
                 bgcolor: "#fefcff",
                 overflow: "hidden",
                 boxShadow: 4,
+                position: "relative",
                 transition: "transform 0.3s, box-shadow 0.3s",
                 "&:hover": {
                   transform: "scale(1.03)",
@@ -98,12 +102,8 @@ const AdventureCard = () => {
                       borderRadius: 2,
                     }}
                   />
-
                   <Chip
-                    label={
-                      statusFilter.charAt(0).toUpperCase() +
-                      statusFilter.slice(1)
-                    }
+                    label={statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1)}
                     size="small"
                     sx={{
                       bgcolor: "#fce4fd",
@@ -114,17 +114,54 @@ const AdventureCard = () => {
                   />
                 </Stack>
 
-                <Typography variant="body2" color="text.secondary">
+                <Typography
+                  variant="body2"
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) =>
+                    handleUpdateEvent(id, { date: e.target.innerText })
+                  }
+                  sx={{ color: "text.secondary" }}
+                >
                   {new Date(date).toLocaleString()}
                 </Typography>
 
-                <Typography variant="h6"  contenteditable="true" sx={{ mt: 0.5, fontWeight: "bold" }}>
+                <Typography
+                  variant="h6"
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) =>
+                    handleUpdateEvent(id, { title: e.target.innerText })
+                  }
+                  sx={{ mt: 0.5, fontWeight: "bold" }}
+                >
                   {title}
                 </Typography>
 
                 <Typography
                   variant="body2"
-                  color="text.secondary"
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) =>
+                    handleUpdateEvent(id, { description: e.target.innerText })
+                  }
+                  sx={{
+                    mt: 0.5,
+                    color: "text.secondary",
+                  }}
+                >
+                  {description}
+                </Typography>
+
+                <Typography
+                  variant="body2"
+                  contentEditable
+                  suppressContentEditableWarning
+                  onBlur={(e) =>
+                    handleUpdateEvent(id, {
+                      location: { ...location, name: e.target.innerText },
+                    })
+                  }
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -154,34 +191,51 @@ const AdventureCard = () => {
                     alignItems="center"
                     sx={{ mt: 1 }}
                   >
-                    <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+                    <Typography
+                      variant="body2"
+                      contentEditable
+                      suppressContentEditableWarning
+                      onBlur={(e) =>
+                        handleUpdateEvent(id, {
+                          soldTickets: parseInt(e.target.innerText),
+                        })
+                      }
+                      sx={{ fontWeight: "bold" }}
+                    >
                       {Math.round(progress)}%
                     </Typography>
                     <Typography
                       variant="body2"
                       color="secondary"
+                      contentEditable
+                      suppressContentEditableWarning
+                      onBlur={(e) =>
+                        handleUpdateEvent(id, {
+                          totalTickets: parseInt(e.target.innerText),
+                        })
+                      }
                       sx={{ fontWeight: "bold" }}
                     >
                       {soldTickets}/{totalTickets}
                     </Typography>
                   </Stack>
                 </Box>
+
+                {/* زر الحذف */}
                 <IconButton
-  color="error"
-  sx={{
-    position: "absolute",
-    top: 8,
-    right: 8,
-  }}
-  onClick={(e) => {
-    e.stopPropagation(); // منع انتقال المستخدم إلى صفحة التفاصيل
-    handleDeleteEvent(id); // تنفيذ الحذف
-  }}
->
-  <DeleteIcon />
-</IconButton>
-
-
+                  color="error"
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteEvent(id);
+                  }}
+                >
+                  <DeleteIcon />
+                </IconButton>
               </CardContent>
             </Card>
           );
