@@ -7,25 +7,13 @@ import GridViewIcon from "@mui/icons-material/GridView";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
+import CreateEventModal from '../../components/EventModal';
 import Header from "../../components/Header";
 import AdventureCard from "../../components/EventCard";
 import { tokens } from "../../theme";
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import axios from "axios";
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '80%',
-  maxWidth: 800,
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: 2,
-};
 
 const Event = () => {
   const theme = useTheme();
@@ -41,16 +29,27 @@ const Event = () => {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get("http://localhost:8081/api/events");
-        setEvents(response.data);
-      } catch (error) {
-        console.error("Error fetching events:", error);
-      }
-    };
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get("http://localhost:8081/api/events");
+      const unique = response.data.filter(
+        (event, index, self) =>
+          index === self.findIndex((e) => e.id === event.id)
+      );
+      setEvents(unique);
+    } catch (error) {
+      console.error("Error fetching events:", error);
+    }
+  };
 
+  const uniqueEvents = events.filter(
+    (event, index, self) =>
+      index === self.findIndex((e) => e.id === event.id)
+  );
+  
+  
+
+  useEffect(() => {
     fetchEvents();
   }, []);
 
@@ -76,6 +75,8 @@ const Event = () => {
         <Button variant="contained" color="error" onClick={handleOpen}>
           Create Event
         </Button>
+
+        <CreateEventModal open={openModal} handleClose={handleClose} onEventCreated={fetchEvents} />
 
         {/* Search Bar */}
         <Box display="flex" alignItems="center" bgcolor="#fff" borderRadius="999px" px="10px" width="250px">
@@ -128,60 +129,14 @@ const Event = () => {
 
       {/* Event Cards */}
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
-        {events.map((event) => (
+        {uniqueEvents.map((event) => (
+
           <Link key={event.id} to={`/event-details/${event.id}`}>
+
             <AdventureCard event={event} />
           </Link>
         ))}
       </Box>
-
-      {/* Modal for Creating Event */}
-      <Modal open={openModal} onClose={handleClose}>
-        <Box sx={style}>
-          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-            <Typography variant="h5">CREATE EVENT</Typography>
-            <IconButton onClick={handleClose}><CloseIcon /></IconButton>
-          </Box>
-
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Title" defaultValue="Music Awards" />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Add Sponsors" />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Description" multiline minRows={3} />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Add Guest" />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField fullWidth label="Day" />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField fullWidth label="Hour" />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField fullWidth label="Minute" />
-            </Grid>
-            <Grid item xs={3}>
-              <TextField fullWidth label="Duration" />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Location" />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField fullWidth label="Set Reminder" />
-            </Grid>
-            <Grid item xs={12}>
-              <Button variant="contained" color="error" fullWidth>
-                CREATE EVENT
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-      </Modal>
     </Box>
   );
 };
