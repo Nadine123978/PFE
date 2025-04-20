@@ -41,23 +41,25 @@ const Event = () => {
       console.error("Error fetching events:", error);
     }
   };
-
-  
-
-  const uniqueEvents = events.filter(
-  (event, index, self) =>
-    index === self.findIndex((e) => e.id === event.id)
-);
-const filteredEvents = uniqueEvents.filter(
+const filteredEvents = events.filter(
   (event) => event.status.toLowerCase() === selectedTab.toLowerCase()
 );
-
-
-  
 
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  const handleDeleteEvent = (id) => {
+    axios
+      .delete(`http://localhost:8081/api/events/${id}`)
+      .then(() => {
+        // إزالة الحدث من الواجهة بعد الحذف
+        setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
+      })
+      .catch((error) => {
+        console.error("حدث خطأ أثناء حذف الحدث:", error);
+      });
+  };
 
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, ml: "250px", width: "calc(100vw - 250px)" }}>
@@ -133,17 +135,19 @@ const filteredEvents = uniqueEvents.filter(
         </Box>
       </Box>
 
-      {/* Event Cards */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
-      {filteredEvents.map((event) => (
+{/* Event Cards */}
+<Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
+  {filteredEvents.map((event) => (
+    <Box key={event.id} sx={{ position: "relative" }}>
+      {/* رابط صفحة التفاصيل */}
+      <Link to={`/event-details/${event.id}`} style={{ textDecoration: "none" }}>
+        <AdventureCard event={event} onDelete={handleDeleteEvent} />
+      </Link>
+    </Box>
+  ))}
+</Box>
 
 
-          <Link key={event.id} to={`/event-details/${event.id}`}>
-
-            <AdventureCard event={event} />
-          </Link>
-        ))}
-      </Box>
     </Box>
   );
 };

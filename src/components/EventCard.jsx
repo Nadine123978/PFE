@@ -10,8 +10,10 @@ import {
   Stack,
   ButtonGroup,
   Button,
+  IconButton,
 } from "@mui/material";
 import axios from "axios";
+import DeleteIcon from "@mui/icons-material/Delete"; // أيقونة الحذف
 
 const AdventureCard = () => {
   const [events, setEvents] = useState([]);
@@ -19,7 +21,7 @@ const AdventureCard = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8081/api/events?status=${statusFilter}`)  
+      .get(`http://localhost:8081/api/events?status=${statusFilter}`)
       .then((response) => {
         setEvents(response.data);
       })
@@ -27,15 +29,24 @@ const AdventureCard = () => {
         console.error("حدث خطأ أثناء جلب البيانات:", error);
       });
   }, [statusFilter]);
-  
+
+  const handleDeleteEvent = (id) => {
+    axios
+      .delete(`http://localhost:8081/api/events/${id}`)
+      .then(() => {
+        // إزالة الحدث المحذوف من الواجهة
+        setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
+      })
+      .catch((error) => {
+        console.error("حدث خطأ أثناء حذف الحدث:", error);
+      });
+  };
 
   if (!events || events.length === 0)
     return <div>لا يوجد أحداث حالياً.</div>;
 
   return (
     <Box>
-   
-
       {/* عرض الأحداث */}
       <Stack direction="row" flexWrap="wrap" gap={3}>
         {events.map((event) => {
@@ -78,7 +89,7 @@ const AdventureCard = () => {
               <CardContent>
                 <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
                   <Chip
-                     label={`Category: ${category?.name || "?"}`}
+                    label={`Category: ${category?.name || "?"}`}
                     size="small"
                     sx={{
                       bgcolor: "#e3e2fb",
@@ -107,10 +118,7 @@ const AdventureCard = () => {
                   {new Date(date).toLocaleString()}
                 </Typography>
 
-                <Typography
-                  variant="h6"
-                  sx={{ mt: 0.5, fontWeight: "bold" }}
-                >
+                <Typography variant="h6" sx={{ mt: 0.5, fontWeight: "bold" }}>
                   {title}
                 </Typography>
 
@@ -158,6 +166,22 @@ const AdventureCard = () => {
                     </Typography>
                   </Stack>
                 </Box>
+                <IconButton
+  color="error"
+  sx={{
+    position: "absolute",
+    top: 8,
+    right: 8,
+  }}
+  onClick={(e) => {
+    e.stopPropagation(); // منع انتقال المستخدم إلى صفحة التفاصيل
+    handleDeleteEvent(id); // تنفيذ الحذف
+  }}
+>
+  <DeleteIcon />
+</IconButton>
+
+
               </CardContent>
             </Card>
           );
