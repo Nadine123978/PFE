@@ -1,12 +1,12 @@
 import {
-  Box, useTheme, IconButton, MenuItem, Select, InputBase, Button, Modal, Grid, Typography, TextField
+  Box, useTheme, IconButton, MenuItem, Select, InputBase, Button
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import SearchIcon from "@mui/icons-material/Search";
-import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
 import CreateEventModal from '../../components/EventModal';
 import Header from "../../components/Header";
 import AdventureCard from "../../components/EventCard";
@@ -41,9 +41,10 @@ const Event = () => {
       console.error("Error fetching events:", error);
     }
   };
-const filteredEvents = events.filter(
-  (event) => event.status.toLowerCase() === selectedTab.toLowerCase()
-);
+
+  const filteredEvents = events.filter(
+    (event) => event.status.toLowerCase() === selectedTab.toLowerCase()
+  );
 
   useEffect(() => {
     fetchEvents();
@@ -53,7 +54,6 @@ const filteredEvents = events.filter(
     axios
       .delete(`http://localhost:8081/api/events/${id}`)
       .then(() => {
-        // إزالة الحدث من الواجهة بعد الحذف
         setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
       })
       .catch((error) => {
@@ -79,25 +79,21 @@ const filteredEvents = events.filter(
           </Button>
         ))}
 
-        {/* Create Event Button */}
         <Button variant="contained" color="error" onClick={handleOpen}>
           Create Event
         </Button>
 
         <CreateEventModal open={openModal} handleClose={handleClose} onEventCreated={fetchEvents} />
 
-        {/* Search Bar */}
         <Box display="flex" alignItems="center" bgcolor="#fff" borderRadius="999px" px="10px" width="250px">
           <SearchIcon sx={{ color: "#2f3a84", fontSize: "18px", mr: 1 }} />
           <InputBase placeholder="Search events..." fullWidth />
         </Box>
 
-        {/* Filter Icon */}
         <IconButton sx={{ backgroundColor: "#2f3a84", color: "#fff", borderRadius: "999px", width: "36px", height: "36px" }}>
           <FilterAltIcon fontSize="small" />
         </IconButton>
 
-        {/* Category Filter */}
         <Select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -111,7 +107,6 @@ const filteredEvents = events.filter(
           <MenuItem value="Conference">Conference</MenuItem>
         </Select>
 
-        {/* Date Range Filter */}
         <Select
           value={dateRange}
           onChange={(e) => setDateRange(e.target.value)}
@@ -124,7 +119,6 @@ const filteredEvents = events.filter(
           <MenuItem value="Next Month">Next Month</MenuItem>
         </Select>
 
-        {/* View Toggle */}
         <Box display="flex" alignItems="center" bgcolor="#dfe3ff" borderRadius="999px" p="3px">
           <IconButton onClick={() => setView("grid")} sx={{ bgcolor: view === "grid" ? "#2f3a84" : "transparent", color: view === "grid" ? "#fff" : "#2f3a84", borderRadius: "999px", mx: "2px" }}>
             <GridViewIcon fontSize="small" />
@@ -135,19 +129,31 @@ const filteredEvents = events.filter(
         </Box>
       </Box>
 
-{/* Event Cards */}
-<Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
-  {filteredEvents.map((event) => (
-    <Box key={event.id} sx={{ position: "relative" }}>
-      {/* رابط صفحة التفاصيل */}
-      <Link to={`/event-details/${event.id}`} style={{ textDecoration: "none" }}>
-        <AdventureCard event={event} onDelete={handleDeleteEvent} />
-      </Link>
-    </Box>
-  ))}
-</Box>
+      {/* Event Cards */}
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
+        {filteredEvents.map((event) => (
+          <Box key={event.id} sx={{ position: "relative" }}>
+            {/* delete button */}
+            <IconButton
+              onClick={() => handleDeleteEvent(event.id)}
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                zIndex: 10,
+                backgroundColor: "#fff",
+              }}
+            >
+              <DeleteIcon sx={{ color: "red" }} />
+            </IconButton>
 
-
+            {/* event link and card */}
+            <Link to={`/event-details/${event.id}`} style={{ textDecoration: "none" }}>
+              <AdventureCard event={event} />
+            </Link>
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 };
