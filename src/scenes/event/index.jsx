@@ -19,13 +19,12 @@ const Event = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const [selectedTab, setSelectedTab] = useState("Active");
+  const [selectedTab, setSelectedTab] = useState("active");
   const [view, setView] = useState("grid");
   const [category, setCategory] = useState("All Category");
   const [dateRange, setDateRange] = useState("This Month");
   const [events, setEvents] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-  const [searchText, setSearchText] = useState(""); // 🔍 البحث
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
@@ -43,15 +42,18 @@ const Event = () => {
     }
   };
 
-  const uniqueEvents = events.filter(
-    (event, index, self) =>
-      index === self.findIndex((e) => e.id === event.id)
-  );
+  
 
-  // 🔎 فلترة الأحداث حسب عنوان الحدث
-  const filteredEvents = uniqueEvents.filter((event) =>
-    event.title.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const uniqueEvents = events.filter(
+  (event, index, self) =>
+    index === self.findIndex((e) => e.id === event.id)
+);
+const filteredEvents = uniqueEvents.filter(
+  (event) => event.status.toLowerCase() === selectedTab.toLowerCase()
+);
+
+
+  
 
   useEffect(() => {
     fetchEvents();
@@ -82,15 +84,10 @@ const Event = () => {
 
         <CreateEventModal open={openModal} handleClose={handleClose} onEventCreated={fetchEvents} />
 
-        {/* 🔍 Search Bar */}
+        {/* Search Bar */}
         <Box display="flex" alignItems="center" bgcolor="#fff" borderRadius="999px" px="10px" width="250px">
           <SearchIcon sx={{ color: "#2f3a84", fontSize: "18px", mr: 1 }} />
-          <InputBase
-            placeholder="Search events..."
-            fullWidth
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
+          <InputBase placeholder="Search events..." fullWidth />
         </Box>
 
         {/* Filter Icon */}
@@ -138,8 +135,11 @@ const Event = () => {
 
       {/* Event Cards */}
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
-        {filteredEvents.map((event) => (
+      {filteredEvents.map((event) => (
+
+
           <Link key={event.id} to={`/event-details/${event.id}`}>
+
             <AdventureCard event={event} />
           </Link>
         ))}
