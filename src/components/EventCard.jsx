@@ -118,7 +118,7 @@ const AdventureCard = () => {
                   {new Date(date).toLocaleString()}
                 </Typography>
 
-                <Typography variant="h6" sx={{ mt: 0.5, fontWeight: "bold" }}>
+                <Typography variant="h6"  contenteditable="true" sx={{ mt: 0.5, fontWeight: "bold" }}>
                   {title}
                 </Typography>
 
