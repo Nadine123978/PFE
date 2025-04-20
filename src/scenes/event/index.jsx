@@ -1,5 +1,11 @@
 import {
-  Box, useTheme, IconButton, MenuItem, Select, InputBase, Button
+  Box,
+  useTheme,
+  IconButton,
+  MenuItem,
+  Select,
+  InputBase,
+  Button
 } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -12,7 +18,6 @@ import Header from "../../components/Header";
 import AdventureCard from "../../components/EventCard";
 import { tokens } from "../../theme";
 import { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
 import axios from "axios";
 
 const Event = () => {
@@ -31,7 +36,7 @@ const Event = () => {
 
   const fetchEvents = async () => {
     try {
-      const response = await axios.get("http://localhost:8081/api/events");
+      const response = await axios.get(`http://localhost:8081/api/events?status=${selectedTab}`);
       const unique = response.data.filter(
         (event, index, self) =>
           index === self.findIndex((e) => e.id === event.id)
@@ -42,13 +47,9 @@ const Event = () => {
     }
   };
 
-  const filteredEvents = events.filter(
-    (event) => event.status.toLowerCase() === selectedTab.toLowerCase()
-  );
-
   useEffect(() => {
     fetchEvents();
-  }, []);
+  }, [selectedTab]);
 
   const handleDeleteEvent = (id) => {
     axios
@@ -73,7 +74,12 @@ const Event = () => {
             variant={selectedTab === tab ? "contained" : "outlined"}
             color="secondary"
             onClick={() => setSelectedTab(tab)}
-            sx={{ borderRadius: "20px", padding: "10px 20px", backgroundColor: selectedTab === tab ? "#F36BF9" : "", color: selectedTab === tab ? "#fff" : "" }}
+            sx={{
+              borderRadius: "20px",
+              padding: "10px 20px",
+              backgroundColor: selectedTab === tab ? "#F36BF9" : "",
+              color: selectedTab === tab ? "#fff" : ""
+            }}
           >
             {tab} ({tab === "Active" ? 48 : tab === "Draft" ? 22 : 32})
           </Button>
@@ -98,7 +104,14 @@ const Event = () => {
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           size="small"
-          sx={{ borderRadius: "999px", backgroundColor: "#fff", fontSize: "14px", px: 2, height: "36px", minWidth: "140px" }}
+          sx={{
+            borderRadius: "999px",
+            backgroundColor: "#fff",
+            fontSize: "14px",
+            px: 2,
+            height: "36px",
+            minWidth: "140px"
+          }}
           displayEmpty
           startAdornment={<FilterAltIcon sx={{ color: "#2f3a84", fontSize: "18px", mr: 1 }} />}
         >
@@ -111,7 +124,14 @@ const Event = () => {
           value={dateRange}
           onChange={(e) => setDateRange(e.target.value)}
           size="small"
-          sx={{ borderRadius: "999px", backgroundColor: "#fff", fontSize: "14px", px: 2, height: "36px", minWidth: "130px" }}
+          sx={{
+            borderRadius: "999px",
+            backgroundColor: "#fff",
+            fontSize: "14px",
+            px: 2,
+            height: "36px",
+            minWidth: "130px"
+          }}
           displayEmpty
           startAdornment={<CalendarMonthIcon sx={{ color: "#2f3a84", fontSize: "18px", mr: 1 }} />}
         >
@@ -131,7 +151,7 @@ const Event = () => {
 
       {/* Event Cards */}
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
-        {filteredEvents.map((event) => (
+        {events.map((event) => (
           <Box key={event.id} sx={{ position: "relative" }}>
             {/* delete button */}
             <IconButton
@@ -147,9 +167,8 @@ const Event = () => {
               <DeleteIcon sx={{ color: "red" }} />
             </IconButton>
 
-            {/* event link and card */}
-           
-              <AdventureCard event={event} />
+            {/* event card */}
+            <AdventureCard event={event} />
           </Box>
         ))}
       </Box>
