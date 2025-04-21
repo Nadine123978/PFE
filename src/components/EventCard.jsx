@@ -45,12 +45,16 @@ const AdventureCard = ({ event, onDelete, onUpdate }) => {
         },
       }}
     >
-      <CardMedia
-        component="img"
-        height="160"
-        image="https://i.imgur.com/C3wrmW2.png"
-        alt={title}
-      />
+   <CardMedia
+  component="img"
+  height="160"
+  image={
+    event.imageUrl?.startsWith("http")
+      ? event.imageUrl
+      : `http://localhost:8081${event.imageUrl}`
+  }
+  alt={title}
+/>
       <CardContent>
         <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
           <Chip
