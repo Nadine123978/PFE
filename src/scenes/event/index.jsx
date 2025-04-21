@@ -88,8 +88,33 @@ const Event = () => {
       .then(() => fetchEvents())
       .catch((err) => console.error("❌ Error updating:", err));
   };
-  
+   
+  const [searchQuery, setSearchQuery] = useState("");
+  const [noResults, setNoResults] = useState(false);
 
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchQuery.trim() === "") {
+        fetchEvents();
+        setNoResults(false);
+      } else {
+        axios
+          .get(`http://localhost:8081/api/events/search?title=${searchQuery}`)
+          .then((res) => {
+            setEvents(res.data);
+            setNoResults(res.data.length === 0);
+          })
+          .catch((err) => {
+            console.error("❌ Error searching events:", err);
+            setNoResults(true);
+          });
+      }
+    }, 300);
+  
+    return () => clearTimeout(delayDebounce);
+  }, [searchQuery]);
+  
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, ml: "250px", width: "calc(100vw - 250px)" }}>
       <Header title="Events" subtitle="Dashboard / Events" />
@@ -107,7 +132,13 @@ const Event = () => {
 
         <Box display="flex" alignItems="center" bgcolor="#fff" borderRadius="999px" px="10px" width="250px">
           <SearchIcon sx={{ color: "#2f3a84", fontSize: "18px", mr: 1 }} />
-          <InputBase placeholder="Search events..." fullWidth />
+          <InputBase
+  placeholder="Search events..."
+  fullWidth
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+/>
+
         </Box>
 
         <IconButton sx={{ backgroundColor: "#2f3a84", color: "#00", borderRadius: "999px", width: "36px", height: "36px" }}>
@@ -163,34 +194,41 @@ const Event = () => {
         </Box>
       </Box>
 
-      {/* Event Cards */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
-        {events.map((event) => (
-          <Box key={event.id} sx={{ position: "relative" }}>
-            {/* delete button */}
-            <IconButton
-              onClick={() => handleDeleteEvent(event.id)}
-              sx={{
-                position: "absolute",
-                top: 8,
-                right: 8,
-                zIndex: 10,
-                backgroundColor: "#fff",
-              }}
-            >
-              <DeleteIcon sx={{ color: "red" }} />
-            </IconButton>
+    {/* Event Cards */}
+<Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
+  {/* عرض رسالة No events found فقط إذا كانت القائمة فارغة */}
+  {events.length === 0 ? (
+    <Box sx={{ width: "100%", textAlign: "center", color: "gray", fontSize: "18px", py: 3 }}>
+      No events found.
+    </Box>
+  ) : (
+    events.map((event) => (
+      <Box key={event.id} sx={{ position: "relative" }}>
+        {/* delete button */}
+        <IconButton
+          onClick={() => handleDeleteEvent(event.id)}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            zIndex: 10,
+            backgroundColor: "#fff",
+          }}
+        >
+          <DeleteIcon sx={{ color: "red" }} />
+        </IconButton>
 
-            {/* event card */}
-            <AdventureCard
-  event={event}
-  onDelete={handleDeleteEvent}
-  onUpdate={handleFieldUpdate}
-/>
-
-          </Box>
-        ))}
+        {/* event card */}
+        <AdventureCard
+          event={event}
+          onDelete={handleDeleteEvent}
+          onUpdate={handleFieldUpdate}
+        />
       </Box>
+    ))
+  )}
+</Box>
+
     </Box>
   );
 };
