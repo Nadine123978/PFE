@@ -72,7 +72,8 @@ const Event = () => {
   
   const handleDeleteEvent = (id) => {
     axios
-      .delete(`http://localhost:8081/api/events/${id}`)
+    .delete(`http://localhost:8081/api/events/${id}`)
+
       .then(() => {
         setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
       })
@@ -155,53 +156,28 @@ const Event = () => {
       </Box>
 
       {/* Event Cards */}
-      {/* Event Cards */}
-<Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
-  {events
-    .filter((event) => {
-      const eventDate = new Date(event.startDate);
-      const now = new Date();
-      const currentMonth = now.getMonth();
-      const currentYear = now.getFullYear();
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
+        {events.map((event) => (
+          <Box key={event.id} sx={{ position: "relative" }}>
+            {/* delete button */}
+            <IconButton
+              onClick={() => handleDeleteEvent(event.id)}
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                zIndex: 10,
+                backgroundColor: "#fff",
+              }}
+            >
+              <DeleteIcon sx={{ color: "red" }} />
+            </IconButton>
 
-      if (dateRange === "This Month") {
-        return (
-          eventDate.getMonth() === currentMonth &&
-          eventDate.getFullYear() === currentYear
-        );
-      }
-
-      if (dateRange === "Next Month") {
-        const nextMonth = (currentMonth + 1) % 12;
-        const nextMonthYear = currentMonth === 11 ? currentYear + 1 : currentYear;
-        return (
-          eventDate.getMonth() === nextMonth &&
-          eventDate.getFullYear() === nextMonthYear
-        );
-      }
-
-      return true; // بحال ما اختار ولا شي
-    })
-    .map((event) => (
-      <Box key={event.id} sx={{ position: "relative" }}>
-        <IconButton
-          onClick={() => handleDeleteEvent(event.id)}
-          sx={{
-            position: "absolute",
-            top: 8,
-            right: 8,
-            zIndex: 10,
-            backgroundColor: "#fff",
-          }}
-        >
-          <DeleteIcon sx={{ color: "red" }} />
-        </IconButton>
-
-        <AdventureCard event={event} />
+            {/* event card */}
+            <AdventureCard event={event} />
+          </Box>
+        ))}
       </Box>
-    ))}
-</Box>
-
     </Box>
   );
 };
