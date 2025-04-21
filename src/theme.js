@@ -126,7 +126,7 @@ export const themeSettings = (mode) => {
   return {
     palette: {
       mode: mode,
-      ...(mode === "dark"
+      ...(mode === "light"
         ? {
             // palette values for dark mode
             primary: {
@@ -143,6 +143,7 @@ export const themeSettings = (mode) => {
             background: {
               default: colors.primary[500],
             },
+           
           }
         : {
             // palette values for light mode
@@ -150,7 +151,7 @@ export const themeSettings = (mode) => {
               main: colors.primary[100],
             },
             secondary: {
-              main: colors.primary[500],
+              main: "#000000", // اللون الأسود
             },
             neutral: {
               dark: colors.grey[700],
@@ -160,6 +161,10 @@ export const themeSettings = (mode) => {
             background: {
               default: "#fcfcfc",
             },
+            text: {
+              primary: "#000000", // أو أي لون بدك ياه
+              secondary: "#333333",
+            }
           }),
     },
     typography: {

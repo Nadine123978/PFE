@@ -110,7 +110,7 @@ const Event = () => {
           <InputBase placeholder="Search events..." fullWidth />
         </Box>
 
-        <IconButton sx={{ backgroundColor: "#2f3a84", color: "#fff", borderRadius: "999px", width: "36px", height: "36px" }}>
+        <IconButton sx={{ backgroundColor: "#2f3a84", color: "#00", borderRadius: "999px", width: "36px", height: "36px" }}>
           <FilterAltIcon fontSize="small" />
         </IconButton>
 
