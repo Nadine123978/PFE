@@ -1,12 +1,4 @@
-import {
-  Box,
-  useTheme,
-  IconButton,
-  MenuItem,
-  Select,
-  InputBase,
-  Button
-} from "@mui/material";
+import { Box, Button, IconButton, MenuItem, Select, InputBase } from "@mui/material";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import GridViewIcon from "@mui/icons-material/GridView";
@@ -19,9 +11,11 @@ import AdventureCard from "../../components/EventCard";
 import { tokens } from "../../theme";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import EventCount from "../../components/EventCount";
+import { useTheme } from "@mui/material/styles";
 
 const Event = () => {
-  const theme = useTheme();
+  const theme = useTheme(); 
   const colors = tokens(theme.palette.mode);
 
   const [selectedTab, setSelectedTab] = useState("active");
@@ -34,23 +28,48 @@ const Event = () => {
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
 
+  useEffect(() => {
+    console.log("Selected Tab:", selectedTab);
+    fetchEvents(); // جلب الأحداث عند تغيير التبويب
+  }, [selectedTab]);
+  
   const fetchEvents = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/api/events?status=${selectedTab}`);
-      const unique = response.data.filter(
-        (event, index, self) =>
-          index === self.findIndex((e) => e.id === event.id)
+      const response = await axios.get(`http://localhost:8081/api/events/by-status?status=${selectedTab}`);
+      console.log("Events Response:", response.data);
+  
+      const currentDate = new Date();
+  
+      const updatedEvents = response.data.map((event) => {
+        const eventStartDate = new Date(event.startDate);
+        const eventEndDate = new Date(event.endDate);
+  
+        let status = "";
+  
+        // التحقق أولاً إذا الحدث Draft
+        if (event.status === "draft") {
+          status = "Draft";
+        } else if (currentDate < eventStartDate) {
+          status = "Upcoming";
+        } else if (currentDate > eventEndDate) {
+          status = "Past";
+        } else {
+          status = "Active";
+        }
+  
+        return { ...event, status };
+      });
+  
+      const uniqueEvents = updatedEvents.filter(
+        (event, index, self) => index === self.findIndex((e) => e.id === event.id)
       );
-      setEvents(unique);
+  
+      setEvents(uniqueEvents);
     } catch (error) {
-      console.error("Error fetching events:", error);
+      console.error("❌ Error fetching events:", error);
     }
   };
-
-  useEffect(() => {
-    fetchEvents();
-  }, [selectedTab]);
-
+  
   const handleDeleteEvent = (id) => {
     axios
       .delete(`http://localhost:8081/api/events/${id}`)
@@ -68,22 +87,8 @@ const Event = () => {
 
       {/* Filter Bar */}
       <Box sx={{ display: "flex", flexDirection: "row", gap: "20px", mb: "20px", backgroundColor: colors.primary[300], alignItems: "center", flexWrap: "wrap" }}>
-        {["Active", "Draft", "Past"].map((tab) => (
-          <Button
-            key={tab}
-            variant={selectedTab === tab ? "contained" : "outlined"}
-            color="secondary"
-            onClick={() => setSelectedTab(tab)}
-            sx={{
-              borderRadius: "20px",
-              padding: "10px 20px",
-              backgroundColor: selectedTab === tab ? "#F36BF9" : "",
-              color: selectedTab === tab ? "#fff" : ""
-            }}
-          >
-            {tab} ({tab === "Active" ? 48 : tab === "Draft" ? 22 : 32})
-          </Button>
-        ))}
+        {/* استخدم مكون EventCount هنا */}
+        <EventCount selectedTab={selectedTab} onTabChange={setSelectedTab} /> {/* تعديل الكود ليعمل مع onTabChange */}
 
         <Button variant="contained" color="error" onClick={handleOpen}>
           Create Event

@@ -35,8 +35,9 @@ import {
       price: 0,
       soldTickets: 0,
       totalTickets: 0,
-      status: "active",
-      date: "2025-06-15T10:00",
+      status: "draft",
+      startDate: "2025-06-15T10:00", // إضافة startDate
+  endDate: "2025-06-15T12:00",
       categoryId: "",
       locationId: "",
     });
@@ -60,47 +61,61 @@ import {
     const handleChange = (field) => (event) => {
       setFormData({ ...formData, [field]: event.target.value });
     };
-  
+
+    const [image, setImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    
+    const handleImageChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        setImage(file);
+        setImagePreview(URL.createObjectURL(file)); // preview
+      }
+    };
+
     const handleSubmit = async () => {
       try {
         const formDataToSend = new FormData();
-    
         formDataToSend.append("title", formData.title);
         formDataToSend.append("description", formData.description);
         formDataToSend.append("price", formData.price);
         formDataToSend.append("soldTickets", formData.soldTickets);
         formDataToSend.append("totalTickets", formData.totalTickets);
         formDataToSend.append("status", formData.status);
-        formDataToSend.append("date", formData.date);
+        formDataToSend.append("startDate", formData.startDate); // تأكد من أن هذه القيمة صحيحة
+        formDataToSend.append("endDate", formData.endDate);     // تأكد من أن هذه القيمة صحيحة
         formDataToSend.append("categoryId", formData.categoryId);
         formDataToSend.append("locationId", formData.locationId);
     
-        if (image) {
-          formDataToSend.append("image", image);
-        }
-    
-        const response = await axios.post("http://localhost:8081/api/events/upload", formDataToSend, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+         // إضافة الملف بشكل صحيح:
+    if (image) {
+      formDataToSend.append("file", image);  // تأكد من أن اسم الحقل هو "file"
+    }
+
+    // إرسال الطلب
+    const response = await axios.post("http://localhost:8081/api/events/upload", formDataToSend, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
     
         console.log("✅ Event Created:", response.data);
         handleClose();
       } catch (error) {
-        console.error("❌ Error creating event:", error);
+        if (error.response) {
+          // طباعة تفاصيل الاستجابة من السيرفر بشكل كامل
+          console.error("❌ Error response from server:", error.response);
+          console.error("Error message:", error.response.data);
+        } else {
+          // في حال لم يتم الحصول على استجابة
+          console.error("❌ Error message:", error.message);
+        }
       }
     };
-    const [image, setImage] = useState(null);
-const [imagePreview, setImagePreview] = useState(null);
-
-const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    setImage(file);
-    setImagePreview(URL.createObjectURL(file)); // preview
-  }
-};
+    
+    
+  
   
     return (
       <Modal open={open} onClose={handleClose}>
@@ -135,6 +150,7 @@ const handleImageChange = (e) => {
   >
     Upload Image
     <input type="file" hidden onChange={handleImageChange} accept="image/*" />
+
   </Button>
   {imagePreview && (
     <Box mt={2}>
@@ -156,16 +172,29 @@ const handleImageChange = (e) => {
             </Grid>
   
             <Grid item xs={6} sm={3}>
-              <TextField
-                label="Date & Time"
-                type="datetime-local"
-                fullWidth
-                value={formData.date}
-                onChange={handleChange("date")}
-                InputLabelProps={{ shrink: true, style: { color: "#aaa" } }}
-                InputProps={{ style: { color: "#fff" } }}
-              />
-            </Grid>
+  <TextField
+    label="Start Date & Time"
+    type="datetime-local"
+    fullWidth
+    value={formData.startDate}
+    onChange={handleChange("startDate")}
+    InputLabelProps={{ shrink: true, style: { color: "#aaa" } }}
+    InputProps={{ style: { color: "#fff" } }}
+  />
+</Grid>
+
+<Grid item xs={6} sm={3}>
+  <TextField
+    label="End Date & Time"
+    type="datetime-local"
+    fullWidth
+    value={formData.endDate}
+    onChange={handleChange("endDate")}
+    InputLabelProps={{ shrink: true, style: { color: "#aaa" } }}
+    InputProps={{ style: { color: "#fff" } }}
+  />
+</Grid>
+
   
             <Grid item xs={6} sm={3}>
               <TextField
@@ -232,19 +261,6 @@ const handleImageChange = (e) => {
                   {loc.venueName} – {loc.fullAddress}
                 </MenuItem>
                 ))}
-              </Select>
-            </Grid>
-  
-            <Grid item xs={12}>
-              <Select
-                fullWidth
-                value={formData.status}
-                onChange={handleChange("status")}
-                sx={{ color: "#fff", backgroundColor: "#333" }}
-              >
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="draft">Draft</MenuItem>
-                <MenuItem value="past">Past</MenuItem>
               </Select>
             </Grid>
   
