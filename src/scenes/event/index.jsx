@@ -155,28 +155,53 @@ const Event = () => {
       </Box>
 
       {/* Event Cards */}
-      <Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
-        {events.map((event) => (
-          <Box key={event.id} sx={{ position: "relative" }}>
-            {/* delete button */}
-            <IconButton
-              onClick={() => handleDeleteEvent(event.id)}
-              sx={{
-                position: "absolute",
-                top: 8,
-                right: 8,
-                zIndex: 10,
-                backgroundColor: "#fff",
-              }}
-            >
-              <DeleteIcon sx={{ color: "red" }} />
-            </IconButton>
+      {/* Event Cards */}
+<Box sx={{ display: "flex", flexWrap: "wrap", gap: "20px", justifyContent: "flex-start", borderRadius: "20px", padding: "10px", bgcolor: colors.primary[300] }}>
+  {events
+    .filter((event) => {
+      const eventDate = new Date(event.startDate);
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
 
-            {/* event card */}
-            <AdventureCard event={event} />
-          </Box>
-        ))}
+      if (dateRange === "This Month") {
+        return (
+          eventDate.getMonth() === currentMonth &&
+          eventDate.getFullYear() === currentYear
+        );
+      }
+
+      if (dateRange === "Next Month") {
+        const nextMonth = (currentMonth + 1) % 12;
+        const nextMonthYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+        return (
+          eventDate.getMonth() === nextMonth &&
+          eventDate.getFullYear() === nextMonthYear
+        );
+      }
+
+      return true; // بحال ما اختار ولا شي
+    })
+    .map((event) => (
+      <Box key={event.id} sx={{ position: "relative" }}>
+        <IconButton
+          onClick={() => handleDeleteEvent(event.id)}
+          sx={{
+            position: "absolute",
+            top: 8,
+            right: 8,
+            zIndex: 10,
+            backgroundColor: "#fff",
+          }}
+        >
+          <DeleteIcon sx={{ color: "red" }} />
+        </IconButton>
+
+        <AdventureCard event={event} />
       </Box>
+    ))}
+</Box>
+
     </Box>
   );
 };
