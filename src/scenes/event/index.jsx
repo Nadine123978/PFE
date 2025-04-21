@@ -82,6 +82,14 @@ const Event = () => {
       });
   };
 
+  const handleFieldUpdate = (id, field, value) => {
+    axios
+      .put(`http://localhost:8081/api/events/${id}`, { [field]: value })
+      .then(() => fetchEvents())
+      .catch((err) => console.error("❌ Error updating:", err));
+  };
+  
+
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, ml: "250px", width: "calc(100vw - 250px)" }}>
       <Header title="Events" subtitle="Dashboard / Events" />
@@ -174,7 +182,12 @@ const Event = () => {
             </IconButton>
 
             {/* event card */}
-            <AdventureCard event={event} />
+            <AdventureCard
+  event={event}
+  onDelete={handleDeleteEvent}
+  onUpdate={handleFieldUpdate}
+/>
+
           </Box>
         ))}
       </Box>

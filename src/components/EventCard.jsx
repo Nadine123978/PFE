@@ -28,6 +28,12 @@ const AdventureCard = ({ event, onDelete, onUpdate }) => {
 
   const progress = totalTickets > 0 ? (soldTickets / totalTickets) * 100 : 0;
 
+  const handleBlur = (field, value) => {
+    if (onUpdate && value !== event[field]) {
+      onUpdate(id, field, value);
+    }
+  };
+
   return (
     <Card
       key={id}
@@ -45,16 +51,16 @@ const AdventureCard = ({ event, onDelete, onUpdate }) => {
         },
       }}
     >
-   <CardMedia
-  component="img"
-  height="160"
-  image={
-    event.imageUrl?.startsWith("http")
-      ? event.imageUrl
-      : `http://localhost:8081${event.imageUrl}`
-  }
-  alt={title}
-/>
+      <CardMedia
+        component="img"
+        height="160"
+        image={
+          event.imageUrl?.startsWith("http")
+            ? event.imageUrl
+            : `http://localhost:8081${event.imageUrl}`
+        }
+        alt={title}
+      />
       <CardContent>
         <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
           <Chip
@@ -83,11 +89,25 @@ const AdventureCard = ({ event, onDelete, onUpdate }) => {
           {new Date(date).toLocaleString()}
         </Typography>
 
-        <Typography variant="h6" sx={{ mt: 0.5, fontWeight: "bold" }}>
+        {/* Editable Title */}
+        <Typography
+          variant="h6"
+          sx={{ mt: 0.5, fontWeight: "bold" }}
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={(e) => handleBlur("title", e.target.innerText)}
+        >
           {title}
         </Typography>
 
-        <Typography variant="body2" sx={{ mt: 0.5, color: "text.secondary" }}>
+        {/* Editable Description */}
+        <Typography
+          variant="body2"
+          sx={{ mt: 0.5, color: "text.secondary" }}
+          contentEditable
+          suppressContentEditableWarning
+          onBlur={(e) => handleBlur("description", e.target.innerText)}
+        >
           {description}
         </Typography>
 
@@ -120,7 +140,11 @@ const AdventureCard = ({ event, onDelete, onUpdate }) => {
             <Typography variant="body2" sx={{ fontWeight: "bold" }}>
               {Math.round(progress)}%
             </Typography>
-            <Typography variant="body2" color="secondary" sx={{ fontWeight: "bold" }}>
+            <Typography
+              variant="body2"
+              color="secondary"
+              sx={{ fontWeight: "bold" }}
+            >
               {soldTickets}/{totalTickets}
             </Typography>
           </Stack>
@@ -132,7 +156,7 @@ const AdventureCard = ({ event, onDelete, onUpdate }) => {
           sx={{ position: "absolute", top: 8, right: 8 }}
           onClick={(e) => {
             e.stopPropagation();
-            onDelete?.(id); // optional callback
+            onDelete?.(id);
           }}
         >
           <DeleteIcon />
