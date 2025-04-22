@@ -24,6 +24,8 @@ const Event = () => {
   const [dateRange, setDateRange] = useState("This Month");
   const [events, setEvents] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [refreshCount, setRefreshCount] = useState(() => () => {});
+
 
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
@@ -122,13 +124,13 @@ const Event = () => {
       {/* Filter Bar */}
       <Box sx={{ display: "flex", flexDirection: "row", gap: "20px", mb: "20px", backgroundColor: colors.primary[300], alignItems: "center", flexWrap: "wrap" }}>
         {/* استخدم مكون EventCount هنا */}
-        <EventCount selectedTab={selectedTab} onTabChange={setSelectedTab} /> {/* تعديل الكود ليعمل مع onTabChange */}
+        <EventCount selectedTab={selectedTab} onTabChange={setSelectedTab}  onCountUpdate={(fn) => setRefreshCount(() => fn)}/> {/* تعديل الكود ليعمل مع onTabChange */}
 
         <Button variant="contained" color="error" onClick={handleOpen}>
           Create Event
         </Button>
 
-        <CreateEventModal open={openModal} handleClose={handleClose} onEventCreated={fetchEvents} />
+        <CreateEventModal open={openModal} handleClose={handleClose} onEventCreated={fetchEvents} refreshCount={refreshCount} />
 
         <Box display="flex" alignItems="center" bgcolor="#fff" borderRadius="999px" px="10px" width="250px">
           <SearchIcon sx={{ color: "#2f3a84", fontSize: "18px", mr: 1 }} />

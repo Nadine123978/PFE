@@ -27,7 +27,7 @@ import {
     p: 4,
   };
   
-  const CreateEventModal = ({ open, handleClose,onEventCreated }) => {
+  const CreateEventModal = ({ open, handleClose,onEventCreated , refreshCount }) => {
     const [formData, setFormData] = useState({
       title: "",
       description: "",
@@ -103,7 +103,10 @@ import {
     if (onEventCreated) {
       onEventCreated(); // ✅ استدعِ التحديث
     }
-    handleClose(); // ✅ سكّر المودال بعدين    
+    handleClose(); 
+    
+    if (refreshCount) refreshCount();
+// ✅ سكّر المودال بعدين    
 
     
         console.log("✅ Event Created:", response.data);

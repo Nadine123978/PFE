@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const EventCount = ({ selectedTab, onTabChange }) => {
+const EventCount = ({ selectedTab, onTabChange , onCountUpdate }) => {
   const [eventCounts, setEventCounts] = useState({
     active: 0,
     draft: 0,
@@ -19,9 +19,16 @@ const EventCount = ({ selectedTab, onTabChange }) => {
         console.error("Error fetching event counts", error);
       }
     };
-
+  
     fetchEventCounts();
-  }, []); // استعلام مرة واحدة عند تحميل المكون
+  
+    // ✅ إذا في دالة تحديث خارجية، خليها تنادي هذا
+    if (typeof onCountUpdate === "function") {
+      onCountUpdate(fetchEventCounts);
+    }
+  
+  }, []);
+  // استعلام مرة واحدة عند تحميل المكون
 
   return (
     <>
