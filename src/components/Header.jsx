@@ -8,11 +8,30 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import SearchBar from "./SearchBar";
+import { useState } from "react";
+import { Badge, Menu, MenuItem } from "@mui/material";
+
 
 const Header = ({ title, subtitle, isCollapsed }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
+
+
+  const [anchorEl, setAnchorEl] = useState(null);
+const [notifications, setNotifications] = useState([
+  "Event created successfully",
+  "New user registered",
+  "Backup completed"
+]);
+
+const handleBellClick = (event) => {
+  setAnchorEl(event.currentTarget);
+};
+
+const handleCloseMenu = () => {
+  setAnchorEl(null);
+};
 
   return (
     <Box
@@ -64,14 +83,41 @@ const Header = ({ title, subtitle, isCollapsed }) => {
           )}
         </IconButton>
         <IconButton
-          sx={{
-            backgroundColor: colors.grey[100],
-            borderRadius: "50%",
-            padding: "8px",
-          }}
-        >
-          <NotificationsOutlinedIcon />
-        </IconButton>
+  onClick={handleBellClick}
+  sx={{
+    backgroundColor: colors.grey[100],
+    borderRadius: "50%",
+    padding: "8px",
+  }}
+>
+  <Badge badgeContent={notifications.length} color="error">
+    <NotificationsOutlinedIcon />
+  </Badge>
+</IconButton>
+
+<Menu
+  anchorEl={anchorEl}
+  open={Boolean(anchorEl)}
+  onClose={handleCloseMenu}
+  PaperProps={{
+    style: {
+      backgroundColor: colors.primary[400],
+      color: "#fff", 
+      width: 300,
+    },
+  }}
+>
+  {notifications.length === 0 ? (
+    <MenuItem disabled>No new notifications</MenuItem>
+  ) : (
+    notifications.map((notif, index) => (
+      <MenuItem key={index} onClick={handleCloseMenu}  sx={{ color: "#fff" }}>
+        {notif}
+      </MenuItem>
+    ))
+  )}
+</Menu>
+
         <IconButton
           sx={{
             backgroundColor: colors.grey[100],
