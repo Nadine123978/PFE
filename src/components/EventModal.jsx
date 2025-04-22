@@ -27,7 +27,7 @@ import {
     p: 4,
   };
   
-  const CreateEventModal = ({ open, handleClose }) => {
+  const CreateEventModal = ({ open, handleClose,onEventCreated }) => {
     const [formData, setFormData] = useState({
       title: "",
       description: "",
@@ -98,6 +98,13 @@ import {
         "Content-Type": "multipart/form-data",
       },
     });
+    console.log("✅ Event Created:", response.data);
+
+    if (onEventCreated) {
+      onEventCreated(); // ✅ استدعِ التحديث
+    }
+    handleClose(); // ✅ سكّر المودال بعدين    
+
 
     
         console.log("✅ Event Created:", response.data);
