@@ -9,11 +9,32 @@ import SeatPlan from "../../components/SeatPlan";
 import TermsAndConditions from "../../components/TermsAndConditions";
 import PackagesList from "../../components/PackagesList";
 import OfficialMerchandise from "../../components/OfficialMerchandise";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Typography from "@mui/material/Typography";
+
 
 const EventDetails = () => {
   const { id } = useParams();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [event, setEvent] = useState(null);
+
+useEffect(() => {
+  axios
+    .get(`http://localhost:8081/api/events/${id}`)
+    .then((res) => setEvent(res.data))
+    .catch((err) => console.error("❌ Error loading event:", err));
+}, [id]);
+
+if (!event) {
+  return (
+    <Box sx={{ p: 3, ml: "250px" }}>
+      <Typography>Loading event details...</Typography>
+    </Box>
+  );
+}
+
 
   return (
     <Box
@@ -25,7 +46,8 @@ const EventDetails = () => {
         width: "calc(100vw - 250px)",
       }}
     >
-      <Header title="Event Details" subtitle="Dashboard / Events / Details" />
+      <Header title={event.title} subtitle={`Dashboard / Events / ${event.title}`} />
+
 
       <Box display="flex" gap={4} mt={2} alignItems="flex-start">
         {/* Left Column */}

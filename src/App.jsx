@@ -39,7 +39,7 @@ function App() {
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/calender" element={<Calendarpage />} />
-              <Route path="/event-details/:id" element={<EventDetails />} />
+              <Route path="/event/:id" element={<EventDetails />} />
               <Route path="/gallery" element={<Bar />} />
               <Route path="/pie" element={<Pie />} />
               <Route path="/line" element={<Line />} />

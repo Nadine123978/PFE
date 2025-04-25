@@ -10,6 +10,8 @@ import {
   IconButton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
+
 
 const AdventureCard = ({ event, onDelete, onUpdate }) => {
   if (!event) return null;
@@ -27,6 +29,8 @@ const AdventureCard = ({ event, onDelete, onUpdate }) => {
   } = event;
 
   const progress = totalTickets > 0 ? (soldTickets / totalTickets) * 100 : 0;
+  const navigate = useNavigate();
+
 
   const handleBlur = (field, value) => {
     if (onUpdate && value !== event[field]) {
@@ -36,21 +40,24 @@ const AdventureCard = ({ event, onDelete, onUpdate }) => {
 
   return (
     <Card
-      key={id}
-      sx={{
-        borderRadius: 5,
-        width: 270,
-        bgcolor: "#fefcff",
-        overflow: "hidden",
-        boxShadow: 4,
-        position: "relative",
-        transition: "transform 0.3s, box-shadow 0.3s",
-        "&:hover": {
-          transform: "scale(1.03)",
-          boxShadow: 6,
-        },
-      }}
-    >
+    key={id}
+    onClick={() => navigate(`/event/${id}`)} // 🔥 بيفتح صفحة التفاصيل
+    sx={{
+      cursor: "pointer", // حتى يصير شكله قابل للنقر
+      borderRadius: 5,
+      width: 270,
+      bgcolor: "#fefcff",
+      overflow: "hidden",
+      boxShadow: 4,
+      position: "relative",
+      transition: "transform 0.3s, box-shadow 0.3s",
+      "&:hover": {
+        transform: "scale(1.03)",
+        boxShadow: 6,
+      },
+    }}
+  >
+  
       <CardMedia
         component="img"
         height="160"
