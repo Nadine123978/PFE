@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from "./scenes/global/Sidebar";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import Dashboard from "./scenes/dashboard";
-import Team from "./scenes/team";
+import  Booking from "./scenes/booking";
 import Invoices from "./scenes/invoices";
 import Contacts from "./scenes/contacts";
-import Bar from "./scenes/bar";
+import GalleryPage from "./scenes/gallery";
 import Event from "./scenes/event";
 import EventDetails from "./scenes/EventDetails"; // الصفحة لعرض تفاصيل الحدث
 import Line from "./scenes/line";
@@ -35,12 +35,12 @@ function App() {
        <main className="content" style={{ flex: 1, overflowY: "auto" }}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/team" element={<Team />} />
+              <Route path="/team" element={< Booking />} />
               <Route path="/contacts" element={<Contacts />} />
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/calender" element={<Calendarpage />} />
               <Route path="/event/:id" element={<EventDetails />} />
-              <Route path="/gallery" element={<Bar />} />
+              <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/pie" element={<Pie />} />
               <Route path="/line" element={<Line />} />
               <Route path="/faq" element={<FAQ />} />
