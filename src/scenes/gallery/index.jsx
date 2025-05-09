@@ -17,6 +17,10 @@ import {
 import GalleryCard from "../../components/GalleryCard";
 import Header from "../../components/Header";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
+// داخل الكود
+
 
 
 
@@ -27,19 +31,30 @@ const [selectedEventId, setSelectedEventId] = useState("");
   const [galleries, setGalleries] = useState({});
   const [openDialog, setOpenDialog] = useState(false); // ✅ داخل الـ component
   const [folderName, setFolderName] = useState(""); // ✅ تعريف اسم الفولدر
+  const [folders, setFolders] = useState([]); // حفظ المجلدات
 
+const navigate = useNavigate();
+
+const handleCardClick = (folderId) => {
+  // الانتقال إلى صفحة المجلد باستخدام navigate
+  navigate(`/folder/${folderId}`);
+};
+
+
+   // جلب المجلدات من الـ API
   useEffect(() => {
-    const fetchEvents = async () => {
+    const fetchFolders = async () => {
       try {
-        const response = await axios.get("http://localhost:8081/api/events/all");
-        setEvents(response.data);
+        const response = await axios.get("http://localhost:8081/api/folder/all"); // API المجلدات
+        setFolders(response.data); // تخزين المجلدات في الـ state
       } catch (error) {
-        console.error("❌ Error fetching events:", error);
+        console.error("❌ Error fetching folders:", error);
       }
     };
 
-    fetchEvents();
+    fetchFolders();
   }, []);
+
 
   const fetchGalleryByEvent = async (eventId) => {
     try {
@@ -91,39 +106,22 @@ const [selectedEventId, setSelectedEventId] = useState("");
             + Create New Folder
           </Button>
         </Box>
+<Grid container spacing={3}>
+  {folders.map((folder, index) => (
+    <Grid item xs={12} sm={6} md={4} lg={3} key={folder.id || index}>
+      <Card sx={{ mb: 1, cursor: "pointer" }} onClick={() => handleCardClick(folder.id)}>
+       
+        <GalleryCard
+          image={folder.imageUrl}
+          title={folder.event?.title}
+          category={folder.event?.category?.name}
+          date={folder.event?.date}
+        />
+      </Card>
+    </Grid>
+  ))}
+</Grid>
 
-        <Grid container spacing={3}>
-          {events.map((event, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={event.id || index}>
-              <GalleryCard
-                title={event.title}
-                category={event.category?.name || "Unknown"}
-                date={event.date}
-                image={
-                  event.imageUrl?.startsWith("http")
-                    ? event.imageUrl
-                    : `http://localhost:8081${event.imageUrl}`
-                }
-              />
-              <Box mt={2}>
-                {(galleries[event.id] || []).map((item, i) => (
-                  <Card key={i} sx={{ mb: 1 }}>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image={
-                        item.imageUrl?.startsWith("http")
-                          ? item.imageUrl
-                          : `http://localhost:8081${item.imageUrl}`
-                      }
-                      alt={`Gallery item ${i}`}
-                    />
-                  </Card>
-                ))}
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
       </Box>
 
      {/* ✅ Dialog لإنشاء فولدر */}

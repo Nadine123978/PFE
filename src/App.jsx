@@ -9,6 +9,7 @@ import Contacts from "./scenes/contacts";
 import GalleryPage from "./scenes/gallery";
 import Event from "./scenes/event";
 import EventDetails from "./scenes/EventDetails"; // الصفحة لعرض تفاصيل الحدث
+import FolderDetailsPage from "./scenes/FolderDetails"; 
 import Line from "./scenes/line";
 import Pie from "./scenes/pie";
 import FAQ from "./scenes/faq";
@@ -40,6 +41,7 @@ function App() {
               <Route path="/invoices" element={<Invoices />} />
               <Route path="/calender" element={<Calendarpage />} />
               <Route path="/event/:id" element={<EventDetails />} />
+              <Route path="/folder/:folderId" element={<FolderDetailsPage />} />
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/pie" element={<Pie />} />
               <Route path="/line" element={<Line />} />
