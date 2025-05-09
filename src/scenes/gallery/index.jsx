@@ -125,37 +125,49 @@ const handleCardClick = (folderId) => {
       </Box>
 
      {/* ✅ Dialog لإنشاء فولدر */}
+{/* ✅ Dialog لإنشاء فولدر */}
 <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
   <DialogTitle>Create New Folder</DialogTitle>
   <DialogContent>
+    {/* Select لاختيار الحدث */}
     <TextField
-  select
-  label="Select Event"
-  fullWidth
-  value={selectedEventId}
-  onChange={(e) => setSelectedEventId(e.target.value)}
-  variant="outlined"
-  margin="dense"
->
-  {events
-    .filter((event) => !galleries[event.id] || galleries[event.id].length === 0) // ✅ بس يلي ما عندهم folders
-    .map((event) => (
-      <MenuItem key={event.id} value={event.id}>
-        {event.title} - {event.category?.name}
-      </MenuItem>
-    ))}
-</TextField>
+      select
+      label="Select Event"
+      fullWidth
+      value={selectedEventId}
+      onChange={(e) => setSelectedEventId(e.target.value)}
+      variant="outlined"
+      margin="dense"
+    >
+      {events
+        .filter((event) => !galleries[event.id] || galleries[event.id].length === 0) // ✅ بس يلي ما عندهم folders
+        .map((event) => (
+          <MenuItem key={event.id} value={event.id}>
+            {event.title} - {event.category?.name}
+          </MenuItem>
+        ))}
+    </TextField>
 
+    {/* Input لاسم الفولدر */}
+    <TextField
+      label="Folder Name"
+      fullWidth
+      value={folderName}
+      onChange={(e) => setFolderName(e.target.value)}
+      variant="outlined"
+      margin="dense"
+    />
   </DialogContent>
+
   <DialogActions>
     <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
     <Button
       onClick={async () => {
         try {
-          // إرسال الـ eventId مع الفولدر
-          await axios.post("http://localhost:8081/api/gallery/folder", {
+          // إرسال الـ eventId مع اسم الفولدر
+          await axios.post("http://localhost:8081/api/folder", {
             name: folderName,
-            event: { id: selectedEventId }, // إرسال الـ eventId
+            event: { id: selectedEventId },
           });
           console.log("✅ Folder created!");
         } catch (error) {
@@ -163,7 +175,7 @@ const handleCardClick = (folderId) => {
         }
         setOpenDialog(false);
         setFolderName("");
-        setSelectedEventId(""); // إعادة تعيين الـ selectedEventId
+        setSelectedEventId("");
       }}
     >
       Create
