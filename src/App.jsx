@@ -4,7 +4,7 @@ import Sidebar from "./scenes/global/Sidebar";
 import { ProSidebarProvider } from "react-pro-sidebar";
 import Dashboard from "./scenes/dashboard";
 import  Booking from "./scenes/booking";
-import Invoices from "./scenes/invoices";
+import EmailInterface from "./scenes/inbox";
 import Contacts from "./scenes/contacts";
 import GalleryPage from "./scenes/gallery";
 import Event from "./scenes/event";
@@ -38,7 +38,7 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/team" element={< Booking />} />
               <Route path="/contacts" element={<Contacts />} />
-              <Route path="/invoices" element={<Invoices />} />
+              <Route path="/inbox" element={<EmailInterface />} />
               <Route path="/calender" element={<Calendarpage />} />
               <Route path="/event/:id" element={<EventDetails />} />
               <Route path="/folder/:folderId" element={<FolderView />} />

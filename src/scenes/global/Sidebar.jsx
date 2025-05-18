@@ -48,7 +48,7 @@ const SideBar = () => {
     { title: "Dashboard", icon: <DashboardOutlinedIcon />, path: "/" },
     { title: "Bookings", icon: <AssignmentOutlinedIcon />, path: "/team" },
     { title: "Invoices", icon: <ReceiptLongOutlinedIcon />, path: "/contacts" },
-    { title: "Inbox", icon: < MailOutlineOutlinedIcon />, path: "/invoices" },
+    { title: "Inbox", icon: < MailOutlineOutlinedIcon />, path: "/inbox" },
     { title: "Calender", icon: <CalendarTodayOutlinedIcon />, path: "/calender" },
     { title: "Events", icon: <EventOutlinedIcon />, path: "/event" },
     { title: "Financials", icon: <AccountBalanceWalletOutlinedIcon />, path: "/faq" },
