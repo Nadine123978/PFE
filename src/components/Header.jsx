@@ -129,18 +129,19 @@ const Header = ({ title, subtitle, isCollapsed }) => {
           }}
         >
           {notifications.filter(notif => !hiddenNotificationsIds.includes(notif.id)).length === 0 && (
-            <MenuItem disabled>لا توجد إشعارات</MenuItem>
+            <MenuItem disabled>No Notifications</MenuItem>
           )}
           {notifications
             .filter((notif) => !hiddenNotificationsIds.includes(notif.id))
             .map((notif) => (
               <MenuItem
-                key={notif.id}
-                onClick={() => {
-                  handleMarkAsReadAndHide(notif.id);
-                  handleClose();
-                  navigate("/inbox");
-                }}
+  key={notif.id}
+  onClick={() => {
+    handleMarkAsReadAndHide(notif.id);
+    handleClose();
+    // نرسل الـ notification.id أو أي id رسالة مرتبطة مع التنقل
+    navigate("/inbox", { state: { emailId: notif.emailId } });
+  }}
                 sx={{
                   fontWeight: notif.read ? "normal" : "bold",
                   whiteSpace: "normal",
